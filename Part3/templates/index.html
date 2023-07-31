@@ -1,0 +1,67 @@
+{%  extends 'base.html' %}
+
+{% block titulo %} Banco {% endblock %}
+
+ {% block conteudo %}
+    <h1>{{ header }}</h1>
+
+     <form action="/ver_saldo" method="post">
+    <label>Número da Conta:</label>
+    <input  placeholder="numero da conta" type="text" id="num_conta" name="num_conta">
+    <input type="submit" value = "Ver saldo">
+     </form>
+
+     {% if saldo %}
+        <p class="saldo">Saldo da conta: R$ {{ saldo }}</p>
+    {% else %}
+        <p class="sem_conta">A conta não existe.</p>
+    {% endif %}
+
+
+    <form action="/criar_conta" method="POST">
+        <label>Criar Conta:</label><br>
+        <input placeholder="numero da conta" type="text" id="numero_conta" name="numero_conta"><br>
+        <input placeholder="saldo" type="number" id="saldo" name="saldo"><br>
+        <input type="submit" value="Criar conta"><br><br>
+    </form>
+
+    <form action="/levantar" method="POST">
+        <label>Levantar dinheiro:</label><br>
+        <input placeholder="numero da conta" type="text" id="num_conta" name="num_conta"><br>
+        <input placeholder="valor" type="number" id="valor" name="valor"><br>
+        <input type="submit" value="Levantar"><br><br>
+    </form>
+
+    <form action="/depositar" method="POST">
+        <label>Depositar dinheiro:</label><br>
+        <input placeholder="numero da conta" type="text" id="num_conta" name="num_conta" ><br>
+        <input placeholder="valor" type="number" id="valor" name="valor"><br>
+        <input type="submit" value="Depositar"><br><br>
+    </form>
+
+     <form action="/transferir" method="POST">
+        <label>Transferir dinheiro:</label><br>
+        <input placeholder="numero da sua conta" type="text" id="num_origem" name="num_conta"><br>
+        <input placeholder="numero da conta do destinatário" type="text" id="num_destino" name="num_destino"><br>
+        <input placeholder="valor" type="number" id="valor" name="valor"><br><br>
+        <input type="submit" value="Transferir">
+    </form>
+
+     <form action="/consultar_extratos" method="POST">
+        <label>Consultar extratos:</label>
+        <input placeholder="numero da conta" type="text" id="num_conta" name="num_conta">
+        <input type="submit" value="Consultar">
+    </form>
+
+    {% if movimentos %}
+        <h2>Movimentos encontrados:</h2>
+        <ul class="movimentos">
+            {% for movimento in movimentos %}
+                <li>{{ movimento[0] }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="sem_movimentos">Nenhum movimento encontrado.</p>
+    {% endif %}
+
+{% endblock %}
