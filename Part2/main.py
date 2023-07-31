@@ -119,6 +119,6 @@ async def consultar_extrato(numero_conta: int):
     conn.close()
 
     if extrato:
-        return {"extrato": extrato}
+        return {"message": f"{extrato}"}
     else:
         return {"message": "Extrato não encontrado"}
