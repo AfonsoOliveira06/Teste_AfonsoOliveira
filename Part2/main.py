@@ -43,6 +43,11 @@ async def depositar(numero_conta: int, valor: int):
                 UPDATE contas SET saldo = ? WHERE numero_conta = ?
         """, (add, numero_conta))
 
+        cursor.execute(f"""
+                               insert into movimentos ("numero_conta","descricao", "valor")
+                                          values ("{numero_conta}","{f"Depósito de {valor}"}", {valor})
+            """)
+
         conn.commit()
         conn.close()
     return {"error": "Essa conta não existe"}
@@ -71,9 +76,15 @@ async def levantar(numero_conta: int, valor: int):
                         UPDATE contas SET saldo = ? WHERE numero_conta = ?
                 """, (add, numero_conta))
 
+            cursor.execute(f"""
+                       insert into movimentos ("numero_conta","descricao", "valor")
+                                  values ("{numero_conta}","{f"Levantamento de {valor}"}", {valor})
+    """)
+
             conn.commit()
             conn.close()
-        return {"error": "Essa conta não existe"}
+        else:
+            return {"error": "Essa conta não existe"}
 
 
 @app.get("/saldo/{numero_conta}")
@@ -89,3 +100,25 @@ async def consultar_saldo(numero_conta: str):
     conn.close()
     numero_conta, saldo = result
     return f"numero_conta {numero_conta}, saldo {saldo}"
+
+
+
+@app.get("/extrato/{numero_conta}")
+async def consultar_extrato(numero_conta: int):
+    conn = sqlite3.connect("Banco.sqlite")
+    cursor = conn.cursor()
+
+    cursor.execute(f"""
+        SELECT descricao FROM movimentos WHERE numero_conta = ?
+    """, (numero_conta,))
+
+    extrato = []
+    for descricao in cursor.fetchall():
+        extrato.append(f"{descricao}")
+
+    conn.close()
+
+    if extrato:
+        return {"extrato": extrato}
+    else:
+        return {"message": "Extrato não encontrado"}
