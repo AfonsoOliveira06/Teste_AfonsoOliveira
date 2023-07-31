@@ -50,7 +50,8 @@ async def depositar(numero_conta: int, valor: int):
 
         conn.commit()
         conn.close()
-    return {"error": "Essa conta não existe"}
+    else:
+        return {"error": "Essa conta não existe"}
 
 
 @app.post("/levantar/{numero_conta}/{valor}")
